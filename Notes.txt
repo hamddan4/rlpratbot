@@ -1,0 +1,5 @@
+pyserial:
+Replace line 209 of ``serialwin32.py'':
+	comDCB.fDtrControl = win32.DTR_CONTROL_ENABLE if self._dtr_state else win32.DTR_CONTROL_DISABLE
+With the following:
+	comDCB.fDtrControl = win32.DTR_CONTROL_DISABLE
