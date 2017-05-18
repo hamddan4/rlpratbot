@@ -98,8 +98,17 @@ int spd = 150;
 int spdPlus = 10;
 button currentDir;
 double dist;
+bool obstacle = false;
+bool stopped = false;
 
 void loop() {
+  dist = getSonarDistance();
+  obstacle = (dist < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
+  if (!stopped && obstacle) {
+    Serial.println("I'm stoppin.");
+    moveRAT(STOP, 0, 0);
+    stopped = true;
+  }
   data = getData();
   if (newData) {
       if (data == SPUP) {
@@ -118,9 +127,16 @@ void loop() {
       } else {
         currentDir = data;
       }
-      moveRAT(currentDir, spd, spd);
+      if (currentDir == FWD || currentDir == LFWD || currentDir == RFWD) {
+        if (!obstacle) {
+          moveRAT(currentDir, spd, spd);
+          stopped = false;
+        }
+      } else {
+        Serial.println("I'm movin backwards.");
+        moveRAT(currentDir, spd, spd);
+        stopped = false;
+      }
   }
-  dist = getSonarDistance();
-  Serial.println(dist);
 }
 
