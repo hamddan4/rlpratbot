@@ -2,6 +2,8 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
+#include <SimpleKalmanFilter.h>
+
 #define CE_PIN 9
 #define CSN_PIN 10
 
@@ -23,6 +25,11 @@ typedef enum {LFWD, FWD, RFWD, STOP, LBCK, BCK, RBCK, SPDN, SPUP} button;
 
 #define echoPin 3
 #define trigPin 4
+
+SimpleKalmanFilter simpleKalmanFilter(10, 10, 0.01);
+// Serial output refresh time
+const long SERIAL_REFRESH_TIME = 100;
+long refresh_time;
 
 void setup() {
   Serial.begin(9600);
@@ -47,8 +54,10 @@ int data;
 
 int getData() {
   newData = false;
+  Serial.print("hika");
   if (radio.available()) {
     radio.read(&data, sizeof(data));
+    Serial.print(data);
     newData = true;
   }
   return data;
@@ -91,19 +100,21 @@ double getSonarDistance() {
   delayMicroseconds(100);
   digitalWrite(trigPin, LOW);
   // reads the travel time (in micro seconds) of the echo wave from the echo pin
-  return (pulseIn(echoPin, HIGH) * soundSpeed) / 20000;
+  float distance = (pulseIn(echoPin, HIGH) * soundSpeed) / 20000;
+  return distance;
 }
 
 int spd = 150;
 int spdPlus = 10;
 button currentDir;
-double dist;
 bool obstacle = false;
 bool stopped = false;
 
 void loop() {
-  dist = getSonarDistance();
-  obstacle = (dist < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
+  float real_dist = getSonarDistance();
+  float estimated_value = simpleKalmanFilter.updateEstimate(real_dist);
+  
+  obstacle = (estimated_value < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
   if (!stopped && obstacle) {
     Serial.println("I'm stoppin.");
     moveRAT(STOP, 0, 0);
@@ -125,7 +136,7 @@ void loop() {
         }
         Serial.println(spd);
       } else {
-        currentDir = data;
+        currentDir = (button)data;
       }
       if (currentDir == FWD || currentDir == LFWD || currentDir == RFWD) {
         if (!obstacle) {
