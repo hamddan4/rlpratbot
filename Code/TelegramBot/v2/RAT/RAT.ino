@@ -4,6 +4,9 @@
 
 #include <SimpleKalmanFilter.h>
 
+#include "magneto.h" //Magnetometer
+#include "sonar.h" //Sonar
+
 #define CE_PIN 9
 #define CSN_PIN 10
 
@@ -23,20 +26,18 @@ typedef enum {LFWD, FWD, RFWD, STOP, LBCK, BCK, RBCK, SPDN, SPUP} button;
 #define MIN_SPD 80
 #define MAX_SPD 250
 
-#define echoPin 3
-#define trigPin 4
 
-SimpleKalmanFilter simpleKalmanFilter(10, 10, 0.01);
-// Serial output refresh time
-const long SERIAL_REFRESH_TIME = 100;
-long refresh_time;
+SimpleKalmanFilter simpleKalmanFilter(20, 2, 0.01);
+
 
 void setup() {
   Serial.begin(9600);
+  
   radio.begin();
   radio.setDataRate(RF24_250KBPS);
   radio.openReadingPipe(1, address);
   radio.startListening();
+  
   pinMode(ENA_PIN, OUTPUT);
   pinMode(ENB_PIN, OUTPUT);
   pinMode(IN1, OUTPUT);
@@ -44,8 +45,10 @@ void setup() {
   pinMode(IN3, OUTPUT);
   pinMode(IN4, OUTPUT);
   
-  pinMode(trigPin, OUTPUT); // pin to send waves
-  pinMode(echoPin, INPUT); // pin to recieve echo waves
+  setup_sonar();
+
+  setup_magneto();
+
   moveRAT(STOP,0,0);
 }
 
@@ -54,7 +57,6 @@ int data;
 
 int getData() {
   newData = false;
-  Serial.print("hika");
   if (radio.available()) {
     radio.read(&data, sizeof(data));
     Serial.print(data);
@@ -88,39 +90,40 @@ void moveRAT(button direction, unsigned char speed_left, unsigned char speed_rig
     analogWrite(ENB_PIN,speed_right);//write speed_right to ENB_PIN,if speed_right is high,allow right motor rotate
 }
 
-const double c = 20; // temperature in Cº
-const double soundSpeed = 331.3 + (0.6 * c); // approximate speed of sound (in m/s) at temperature c
 
-double getSonarDistance() {
-  // resets the trig pin
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // sets the trig pin to 1 for 100ms (must set for this long for the sonar to send waves)
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(100);
-  digitalWrite(trigPin, LOW);
-  // reads the travel time (in micro seconds) of the echo wave from the echo pin
-  float distance = (pulseIn(echoPin, HIGH) * soundSpeed) / 20000;
-  return distance;
-}
 
 int spd = 150;
 int spdPlus = 10;
 button currentDir;
 bool obstacle = false;
 bool stopped = false;
+float angle_tol = 5*PI/180; // angle error tolerance
 
 void loop() {
   float real_dist = getSonarDistance();
   float estimated_value = simpleKalmanFilter.updateEstimate(real_dist);
   
+  Serial.print(real_dist);
+  Serial.print(" ");
+  Serial.println(estimated_value);
+  
   obstacle = (estimated_value < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
+
+
+  
   if (!stopped && obstacle) {
     Serial.println("I'm stoppin.");
     moveRAT(STOP, 0, 0);
     stopped = true;
   }
   data = getData();
+  float curr_angle = get_yangle();
+  float dest_angle = 0;
+  //Serial.println(curr_angle);
+  if (abs(curr_angle - dest_angle) > angle_tol) {
+    
+  }
+ 
   if (newData) {
       if (data == SPUP) {
         spd += 10;
@@ -149,5 +152,11 @@ void loop() {
         stopped = false;
       }
   }
+// Serial.print(orientation.x);
+// Serial.print(" ");
+// Serial.print(orientation.y);
+// Serial.print(" ");
+// Serial.print(orientation.z);
+// Serial.println(" ");
 }
 
