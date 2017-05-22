@@ -30,6 +30,10 @@ typedef enum {LFWD, FWD, RFWD, STOP, LBCK, BCK, RBCK, SPDN, SPUP} button;
 SimpleKalmanFilter simpleKalmanFilter(20, 2, 0.01);
 
 
+int mod(int x, int n) {
+  return (x < 0) ? ((x % n) + n) else (x % n);
+}
+
 void setup() {
   Serial.begin(9600);
   
@@ -90,8 +94,6 @@ void moveRAT(button direction, unsigned char speed_left, unsigned char speed_rig
     analogWrite(ENB_PIN,speed_right);//write speed_right to ENB_PIN,if speed_right is high,allow right motor rotate
 }
 
-
-
 int spd = 150;
 int spdPlus = 10;
 button currentDir;
@@ -108,8 +110,6 @@ void loop() {
   Serial.println(estimated_value);
   
   obstacle = (estimated_value < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
-
-
   
   if (!stopped && obstacle) {
     Serial.println("I'm stoppin.");
@@ -120,8 +120,18 @@ void loop() {
   float curr_angle = get_yangle();
   float dest_angle = 0;
   //Serial.println(curr_angle);
-  if (abs(curr_angle - dest_angle) > angle_tol) {
-    
+  diff = dest_angle - curr_angle;
+  if (abs(diff) < 0.5) {
+    dir = diff >= 0;
+  } else {
+    dir = diff < 0;
+  }
+  if (abs(diff) > angle_tol) {
+    if (dir) {
+      moveRAT(RROT, spd, spd);
+    } else {
+      moveRAT(LROT, spd, spd);
+    }
   }
  
   if (newData) {
