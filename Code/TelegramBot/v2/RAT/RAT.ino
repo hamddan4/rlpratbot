@@ -19,7 +19,7 @@ SimpleKalmanFilter simpleKalmanFilter(20, 2, 0.01);
 
 
 int mod(int x, int n) {
-  return (x < 0) ? ((x % n) + n) else (x % n);
+  return (x < 0) ? ((x % n) + n) : (x % n);
 }
 
 void setup() {
@@ -64,9 +64,9 @@ void loop() {
   float real_dist = getSonarDistance();
   float estimated_value = simpleKalmanFilter.updateEstimate(real_dist);
   
-  Serial.print(real_dist);
+  /*Serial.print(real_dist);
   Serial.print(" ");
-  Serial.println(estimated_value);
+  Serial.println(estimated_value);*/
   
   obstacle = (estimated_value < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
   
@@ -76,10 +76,14 @@ void loop() {
     stopped = true;
   }
   data = getData();
+
+  //TO THE NORTH
   float curr_angle = get_yangle();
+  Serial.println(curr_angle);
   float dest_angle = 0;
   //Serial.println(curr_angle);
-  diff = dest_angle - curr_angle;
+  float diff = dest_angle - curr_angle;
+  float dir;
   if (abs(diff) < 0.5) {
     dir = diff >= 0;
   } else {
@@ -92,6 +96,7 @@ void loop() {
       moveRAT(LROT, spd, spd);
     }
   }
+ //=================
  
   if (newData) {
       if (data == SPUP) {

@@ -25,19 +25,6 @@ AXIS get_axis()
  float xAngle = atan2(scaled.YAxis, scaled.XAxis);
  float yAngle = atan2(scaled.ZAxis, scaled.XAxis);
  float zAngle = atan2(scaled.ZAxis, scaled.YAxis);
- /*Serial.print(xAngle);
- Serial.print(" ");*/
- /*Serial.print(yAngle);
- Serial.print(" ");/*
- Serial.print(zAngle);
- Serial.println(" ");*/
- /*
- if(xAngle < 0) xAngle += TAU;
- if(xAngle > TAU) xAngle -= TAU;
- if(yAngle < 0) yAngle += TAU; 
- if(yAngle > TAU) yAngle -= TAU;
- if(zAngle < 0) zAngle += TAU;
- if(zAngle > TAU) zAngle -= TAU;*/
  AXIS orientation = {xAngle+PI, yAngle+PI, zAngle+PI};
 
  return orientation;

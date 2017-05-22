@@ -20,6 +20,5 @@ double getSonarDistance() {
   digitalWrite(trigPin, LOW);
   // reads the travel time (in micro seconds) of the echo wave from the echo pin
   float distance = (pulseIn(echoPin, HIGH) * soundSpeed) / 20000;
-  Serial.println(distance);
   return distance;
 }
