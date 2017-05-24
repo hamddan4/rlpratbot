@@ -5,16 +5,18 @@ import time
 import telepot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+import struct 
+
 
 print('hello')
 
-test = True
+test = False
 
 codes = [u'↶', u'↑', u'↷', u'✋', u'↵', u'↓', u'↳', u'-', u'+']
 dir_codes = {c: n for n, c in enumerate(codes)}
 
 if(not test):
-    ser = serial.Serial(port='COM8', baudrate=9600)
+    ser = serial.Serial(port='COM6', baudrate=9600)
 
 def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
@@ -29,6 +31,12 @@ def handle(msg):
         message += 'longitude: ' + str(msg['location']['longitude'])
         
         bot.sendMessage(chat_id, message)
+
+        bot.sendMessage(chat_id, "Command sent")
+        if(not test):
+            ser.write(bytes([255]))
+            ser.write(struct.pack("f",msg['location']['latitude']))
+            ser.write(struct.pack("f",msg['location']['longitude']))
         
         
     elif content_type == 'text':
