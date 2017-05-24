@@ -12,7 +12,6 @@ struct AXIS {
 
 void setup_magneto()
 {
- Serial.begin(9600);
  Wire.begin();
  compass = HMC5883L();
  compass.SetScale(1.3);
@@ -30,10 +29,10 @@ AXIS get_axis()
  return orientation;
 }
 
-float get_yangle(){
+int get_yangle() {
  MagnetometerScaled scaled = compass.ReadScaledAxis();
  float yAngle = atan2(scaled.ZAxis, scaled.XAxis);
 
- return yAngle;
+ return int(yAngle*(180/PI));
 }
 

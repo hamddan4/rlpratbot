@@ -43,6 +43,7 @@ int getData() {
   newData = false;
   if (radio.available()) {
     radio.read(&data, sizeof(data));
+    Serial.println(data);
     newData = true;
   }
   return data;
@@ -94,7 +95,7 @@ void loop() {
         }
         Serial.println(spd);
       } else {
-        currentDir = data;
+        currentDir = (button)data;
       }
       moveRAT(currentDir, spd, spd);
   }

@@ -2,8 +2,8 @@
 
 typedef enum {LFWD, FWD, RFWD, STOP, LBCK, BCK, RBCK, SPDN, SPUP, RROT, LROT} button;
 
-#define ENA_PIN 5 // ENA of DC motor driver module attach to pin5 of sunfounder uno board
-#define ENB_PIN 6 // ENB of DC motor driver moduleattach to pin6 of sunfounder uno board
+#define ENA_PIN 6 // ENA of DC motor driver module attach to pin5 of sunfounder uno board
+#define ENB_PIN 5 // ENB of DC motor driver moduleattach to pin6 of sunfounder uno board
 #define IN1 14 // left IN1 attach to pin8
 #define IN2 15 // left IN2 attach to pin9
 #define IN3 16 //right  IN3 attach to pin10
@@ -25,11 +25,11 @@ void moveRAT(button direction, unsigned char speed_left, unsigned char speed_rig
 {
     switch(direction)
     {
-        case FWD:  digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);
-                   digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH); break;
+        case FWD:  digitalWrite(IN1,LOW);  digitalWrite(IN2,HIGH);
+                   digitalWrite(IN3,LOW);  digitalWrite(IN4,HIGH); break;
         case LFWD: digitalWrite(IN1,LOW);  digitalWrite(IN2,LOW);
-                   digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH); break;
-        case RFWD: digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);
+                   digitalWrite(IN3,LOW);  digitalWrite(IN4,HIGH); break;
+        case RFWD: digitalWrite(IN1,LOW);  digitalWrite(IN2,HIGH);
                    digitalWrite(IN3,LOW);  digitalWrite(IN4,LOW); break;
         case BCK:  digitalWrite(IN1,HIGH); digitalWrite(IN2,LOW);
                    digitalWrite(IN3,HIGH); digitalWrite(IN4,LOW); break;
@@ -37,8 +37,8 @@ void moveRAT(button direction, unsigned char speed_left, unsigned char speed_rig
                    digitalWrite(IN3,HIGH); digitalWrite(IN4,LOW); break;
         case RBCK: digitalWrite(IN1,HIGH); digitalWrite(IN2,LOW);
                    digitalWrite(IN3,LOW);  digitalWrite(IN4,LOW); break;
-        case RROT: digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);
-                   digitalWrite(IN3,HIGH);  digitalWrite(IN4,LOW); break;
+        case RROT: digitalWrite(IN1,LOW);  digitalWrite(IN2,HIGH);
+                   digitalWrite(IN3,HIGH); digitalWrite(IN4,LOW); break;
         case LROT: digitalWrite(IN1,HIGH); digitalWrite(IN2,LOW);
                    digitalWrite(IN3,LOW);  digitalWrite(IN4,HIGH); break;                   
         case STOP:
