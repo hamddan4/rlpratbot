@@ -1,7 +1,6 @@
 #define trigPin 3
 #define echoPin 4
 
-
 const double c = 20; // temperature in Cº
 const double soundSpeed = 331.3 + (0.6 * c); // approximate speed of sound (in m/s) at temperature c
 
@@ -22,3 +21,4 @@ double getSonarDistance() {
   float distance = (pulseIn(echoPin, HIGH) * soundSpeed) / 20000;
   return distance;
 }
+
