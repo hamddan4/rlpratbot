@@ -37,21 +37,21 @@ float latitude;
 float longitude;
 
 bool automatic = false;
+int dest_angle = 0;
 
 void loop() {
   float real_dist = getSonarDistance();
   float estimated_value = simpleKalmanFilter.updateEstimate(real_dist);
   
-  /*Serial.print(real_dist);
-  Serial.print(" ");
-  Serial.println(estimated_value);*/
+//  Serial.print(real_dist);
+//  Serial.print(" ");
+//  Serial.println(estimated_value);
   
-  obstacle = (estimated_value < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
+  obstacle = (real_dist < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
   
-  if (!stopped && obstacle) {
+  if (obstacle) {
     Serial.println("I'm stoppin.");
     moveRAT(STOP, 0, 0);
-    stopped = true;
   }
   data = getData();
 
@@ -71,12 +71,17 @@ void loop() {
       Serial.println(spd);
     } else if (data == LOCATION) {
       automatic = true;
-      latitude = getDataFloat();
-      longitude = getDataFloat();
-      Serial.println("LOCATION");
-      Serial.print(latitude);
-      Serial.print(" ");
-      Serial.println(longitude);
+      float latitude_objective = getDataFloat();
+      float longitude_objective = getDataFloat();
+//      Serial.println("LOCATION");
+//      Serial.print(latitude);
+//      Serial.print(" ");
+//      Serial.println(longitude);
+      float latitude_current = 41.500450;
+      float longitude_current = 2.111220;
+      float angle = atan2(longitude_objective-longitude_current, latitude_objective-latitude_current);
+      dest_angle = angle * 180/PI;
+      dest_angle = mod(dest_angle, 360);
     } else {
       automatic = false;
       currentDir = (button)data;
@@ -85,21 +90,16 @@ void loop() {
       if (currentDir == FWD || currentDir == LFWD || currentDir == RFWD) {
         if (!obstacle) {
           moveRAT(currentDir, spd, spd);
-          stopped = false;
         }
       } else {
-        Serial.println("I'm movin backwards.");
         moveRAT(currentDir, spd, spd);
-        stopped = false;
       }
     }
   }
 
   if (automatic){
     //TO THE NORTH
-    int curr_angle = get_yangle() + 90;
-    int dest_angle = 0;
-  
+    int curr_angle = mod(get_yangle() + 90, 360);  
     int diff = dest_angle - curr_angle;
     int dir;
     int dist;
@@ -108,25 +108,32 @@ void loop() {
       dist = abs(diff);
     } else {
       dir = -sign(diff);
-      dist = mod(diff, 360);
+      dist = 360 - abs(diff);
+      Serial.println("Bigger than 180");
     }
-    Serial.println(mod(diff, 360));
-    float rotationSpeed = min_vel + dist*(max_vel-min_vel)/180;  
-    Serial.println(rotationSpeed);
-    if (mod(diff, 360) > angle_tol) {
-      Serial.print("Entro ");
+    //Serial.println(mod(diff, 360));
+    float rotationSpeed = min_vel + dist*(max_vel-min_vel)/180;
+    //Serial.println(rotationSpeed);
+    Serial.print(curr_angle);
+    Serial.print(" ");
+    Serial.print(dest_angle);
+    Serial.print(" ");
+    Serial.println(dist);
+    if (dist > angle_tol) {
+      //Serial.print("Entro ");
       if (dir == -1) {
-        Serial.println("DRETA");
+        //Serial.println("DRETA");
         moveRAT(LROT, rotationSpeed, rotationSpeed);
       } else {
-        Serial.println("ESQUERRA");
+        //Serial.println("ESQUERRA");
         moveRAT(RROT, rotationSpeed, rotationSpeed);
       }
     } else {
-      moveRAT(FWD,spd,spd);
+      if (!obstacle) {
+        currentDir = FWD;
+        moveRAT(FWD,spd,spd);
+      }
     }
-  }else{
-
   }
 
   /*if (abs(dest_angle - curr_angle) > angle_tol) {
