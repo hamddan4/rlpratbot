@@ -6,7 +6,7 @@
 #include "magneto.h"  //Magnetometer
 #include "sonar.h"    //Sonar
 #include "motors.h"   //Motors
-#include "utils.h"
+#include "global.h"
 
 SimpleKalmanFilter simpleKalmanFilter(20, 2, 0.01);
 
@@ -36,7 +36,7 @@ int angle_tol = 10; // angle error tolerance
 float latitude;
 float longitude;
 
-const int automatic = false;
+bool automatic = false;
 
 void loop() {
   float real_dist = getSonarDistance();
@@ -73,6 +73,7 @@ void loop() {
       automatic = true;
       latitude = getDataFloat();
       longitude = getDataFloat();
+      Serial.println("LOCATION");
       Serial.print(latitude);
       Serial.print(" ");
       Serial.println(longitude);

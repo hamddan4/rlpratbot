@@ -29,8 +29,13 @@ int getData() {
 }
 
 float getDataFloat() {
-  while (!radio.available());
-  radio.read(&dataFloat, sizeof(dataFloat));
-  return dataFloat;
+  byte flo[4];
+  for(int i = 0; i<sizeof(float); i++){
+    while (!radio.available());
+    flo[i] = getData();
+    Serial.println((int)flo[i]);
+  }
+  
+  return *((float*)flo);
 }
 
