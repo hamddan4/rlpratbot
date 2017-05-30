@@ -91,17 +91,16 @@ void loop() {
     actual_dist = detected_dist;
   }
   
-  float estimated_dist = simpleKalmanFilter.updateEstimate(actual_dist);
+  float distance_from_objective = simpleKalmanFilter.updateEstimate(actual_dist);
   
   if (print_sonar){
     Serial.print(actual_dist);
     Serial.print(" ");
-    Serial.print(estimated_dist);
+    Serial.print(distance_from_objective);
     Serial.print(" ");
   }
   
-  obstacle = false;
-  //(estimated_dist < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
+  obstacle = (distance_from_objective < 16) && (currentDir == FWD || currentDir == LFWD || currentDir == RFWD);
   
   if (obstacle) {
     moveRAT(STOP, 0, 0);
