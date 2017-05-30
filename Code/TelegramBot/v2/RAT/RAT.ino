@@ -7,7 +7,7 @@
 #include "GPS.h"        //GPS
 #include "global.h"     //Global functions
 
-SimpleKalmanFilter simpleKalmanFilter(2, 4, 0.1);
+SimpleKalmanFilter simpleKalmanFilter(1, 10, 0.01);
 
 const bool print_sonar = true;
 const bool print_magneto = false; //not implemented
@@ -33,7 +33,7 @@ void setup() {
   moveRAT(STOP,0,0);
 }
 
-const int min_vel = 120;
+const int min_vel = 150;
 const int max_vel = 250;
 int spd = 200;
 int spdPlus = 10;
