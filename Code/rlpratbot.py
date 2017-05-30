@@ -16,7 +16,7 @@ codes = [u'↶', u'↑', u'↷', u'✋', u'↵', u'↓', u'↳', u'-', u'+']
 dir_codes = {c: n for n, c in enumerate(codes)}
 
 if(not test):
-    ser = serial.Serial(port='COM6', baudrate=9600)
+    ser = serial.Serial(port='COM8', baudrate=9600)
 
 def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)

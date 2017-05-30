@@ -1,6 +1,7 @@
 #define trigPin 3
 #define echoPin 4
 
+
 const double c = 20; // temperature in Cº
 const double soundSpeed = 331.3 + (0.6 * c); // approximate speed of sound (in m/s) at temperature c
 
@@ -18,7 +19,10 @@ double getSonarDistance() {
   delayMicroseconds(100);
   digitalWrite(trigPin, LOW);
   // reads the travel time (in micro seconds) of the echo wave from the echo pin
-  float distance = (pulseIn(echoPin, HIGH) * soundSpeed) / 20000;
+
+  unsigned long res_echo = pulseIn(echoPin, HIGH, 20000);
+  
+  float distance = (res_echo * soundSpeed) / 20000;
   return distance;
 }
 

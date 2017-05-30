@@ -11,7 +11,11 @@ Servo myservo;//create a object of servo,named as myservo
 
 #define FORWARD 0  //define forward=0,car move forward
 #define BACK    1 //define back=1,car move back
-#define SPEED 200 //define SPEED=180,it is the rotate speed of motor
+#define RIGHT 2  //define forward=0,car move forward
+#define LEFT    3 //define back=1,car move back
+
+#define SPEED_RIGHT 215 //define SPEED=180,it is the rotate speed of motor
+#define SPEED_LEFT 255 //define SPEED=180,it is the rotate speed of motor
 void setup()
 {
     Serial.begin(19200);
@@ -23,11 +27,13 @@ void setup()
     pinMode(IN3, OUTPUT);
     pinMode(IN4, OUTPUT);
     Serial.println("Hello");
-    CAR_move(FORWARD,SPEED,SPEED);//car move forward with speed 180
-    delay(2000);//delay 2 second
-    CAR_move(BACK,SPEED,SPEED);
-    delay(2000);
-    CAR_move(BACK,0,0);//car stop    
+    CAR_move(FORWARD,SPEED_LEFT,SPEED_RIGHT);//car move forward with speed 180
+    delay(10000);//delay 10 second
+    CAR_move(FORWARD,0,0);//car move forward with speed 180
+    delay(10000);//delay 5 second
+    CAR_move(FORWARD,SPEED_LEFT,SPEED_RIGHT);//car move forward with speed 180
+    delay(10000);//delay 2 second
+
 }
 
 void loop()
@@ -41,12 +47,27 @@ void CAR_move(unsigned char direction, unsigned char speed_left, unsigned char s
     {
         //car move forward with speed 180
         case 0: Serial.println("Forward");
-                digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW);//left motor clockwise rotation
-		            digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW);break;//right motor clockwise rotation
+                digitalWrite(IN1,LOW);digitalWrite(IN2,HIGH);//left motor clockwise rotation
+		            digitalWrite(IN3,LOW);digitalWrite(IN4,HIGH);break;//right motor clockwise rotation
         //car move back with speed 180
 	      case 1: Serial.println("Backwards");
-	              digitalWrite(IN1,LOW);digitalWrite(IN2,HIGH);
-		            digitalWrite(IN3,LOW);digitalWrite(IN4,HIGH);break;
+	              digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW);
+		            digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW);break;
+        case 2: Serial.println("RIGHT");
+                digitalWrite(IN1,LOW);digitalWrite(IN2,HIGH);//left motor clockwise rotation
+                digitalWrite(IN3,LOW);digitalWrite(IN4,LOW);break;//right motor clockwise rotation
+        //car move back with speed 180
+        case 3: Serial.println("LEFT");
+                digitalWrite(IN1,LOW);digitalWrite(IN2,LOW);
+                digitalWrite(IN3,LOW);digitalWrite(IN4,HIGH);break;
+        case 4: Serial.println("SUPER RIGHT");
+                digitalWrite(IN1,LOW);digitalWrite(IN2,HIGH);//left motor clockwise rotation
+                digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW);break;//right motor clockwise rotation
+        //car move back with speed 180
+        case 5: Serial.println("SUPER LEFT");
+                digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW);
+                digitalWrite(IN3,LOW);digitalWrite(IN4,HIGH);break;
+                
 	      default: break;
     }
     analogWrite(ENA_PIN,speed_left);//write speed_left to ENA_PIN,if speed_left is high,allow left motor rotate

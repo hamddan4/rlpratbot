@@ -31,7 +31,8 @@ int getData() {
 float getDataFloat() {
   byte flo[4];
   for(int i = 0; i<sizeof(float); i++){
-    while (!radio.available());
+    uint32_t maxMillis = millis() + 10000;
+    while (!radio.available() && millis() < maxMillis);
     flo[i] = getData();
     Serial.println((int)flo[i]);
   }
