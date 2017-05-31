@@ -2,6 +2,10 @@
 #include <HMC5883L.h>
 HMC5883L compass;
 
+
+SimpleKalmanFilter rotatingKalman(1, 10, 0.01);
+SimpleKalmanFilter hardKalman(2, 10, 0.01);
+
 const double TAU = 2*PI;
 
 struct AXIS {
@@ -34,5 +38,13 @@ int get_yangle() {
  float yAngle = atan2(scaled.ZAxis, scaled.XAxis);
 
  return int(yAngle*(180/PI));
+}
+
+int get_yangle_rotating(int yangle){
+  return rotatingKalman.updateEstimate(yangle);
+}
+
+int get_yangle_rotating_soft(int yangle){
+  return hardKalman.updateEstimate(yangle);
 }
 
