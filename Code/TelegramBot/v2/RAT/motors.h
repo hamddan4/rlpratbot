@@ -1,4 +1,18 @@
-
+/*H========================================================================
+* FILENAME :        motors.h
+*
+* DESCRIPTION :
+*       All function to control the motors.
+* 
+* AUTHORS :    RLP Group 09-03
+*                 - Daniel Azemar   dani.azemar@gmail.com
+*                 - Jialuo Chen     
+*                 - Sergi Pous
+*                 - Adria Rico
+*                 
+* START DATE :    Feb 2017
+* 
+*========================================================================H*/
 
 typedef enum {LFWD, FWD, RFWD, STOP, LBCK, BCK, RBCK, SPDN, SPUP, RROT, LROT} button;
 

@@ -1,10 +1,26 @@
+/*H========================================================================
+* FILENAME :        magneto.h
+*
+* DESCRIPTION :
+*       All functions necessary for retrieve data from the magnetometer.
+* 
+* AUTHORS :    RLP Group 09-03
+*                 - Daniel Azemar   dani.azemar@gmail.com
+*                 - Jialuo Chen     
+*                 - Sergi Pous
+*                 - Adria Rico
+*                 
+* START DATE :    May 2017
+* 
+*========================================================================H*/
+
 #include <Wire.h>
 #include <HMC5883L.h>
 HMC5883L compass;
 
 
-SimpleKalmanFilter rotatingKalman(1, 10, 0.01);
-SimpleKalmanFilter hardKalman(2, 10, 0.01);
+SimpleKalmanFilter rotatingKalman(1, 10, 0.01); //When rotating, kalman has to be softer
+SimpleKalmanFilter hardKalman(2, 10, 0.01);     //Sometimes is useful to have more filtrated data
 
 const double TAU = 2*PI;
 
@@ -45,6 +61,7 @@ int get_yangle_rotating(int yangle){
 }
 
 int get_yangle_rotating_soft(int yangle){
+  //More kalman means more hard filtering, that in return means more soft pics of data
   return hardKalman.updateEstimate(yangle);
 }
 

@@ -1,3 +1,19 @@
+/*H========================================================================
+* FILENAME :        sonar.h
+*
+* DESCRIPTION :
+*       All function to retrieve data from sonar.
+* 
+* AUTHORS :    RLP Group 09-03
+*                 - Daniel Azemar   dani.azemar@gmail.com
+*                 - Jialuo Chen     
+*                 - Sergi Pous
+*                 - Adria Rico
+*                 
+* START DATE :    Feb 2017
+* 
+*========================================================================H*/
+
 #define trigPin 3
 #define echoPin 4
 

@@ -1,3 +1,19 @@
+/*H========================================================================
+* FILENAME :        transeiver.h
+*
+* DESCRIPTION :
+*       All functions to retrieve data from the transceiver.
+* 
+* AUTHORS :    RLP Group 09-03
+*                 - Daniel Azemar   dani.azemar@gmail.com
+*                 - Jialuo Chen     
+*                 - Sergi Pous
+*                 - Adria Rico
+*                 
+* START DATE :    Feb 2017
+* 
+*========================================================================H*/
+
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>

@@ -1,3 +1,20 @@
+/*H========================================================================
+* FILENAME :        GPS.h
+*
+* DESCRIPTION :
+*       All functions to retrieve data from GPS will be here. 
+*       This file is a modification from the primary example of this GPS.
+* 
+* AUTHORS :    RLP Group 09-03
+*                 - Daniel Azemar   dani.azemar@gmail.com
+*                 - Jialuo Chen     
+*                 - Sergi Pous
+*                 - Adria Rico
+*                 
+* START DATE :    Apr 2017
+* 
+*========================================================================H*/
+
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
 SoftwareSerial mySerial(8, 7);
