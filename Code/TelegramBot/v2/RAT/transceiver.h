@@ -36,6 +36,7 @@ int data;
 float dataFloat;
 
 int getData() {
+  //Gets a byte of data
   newData = false;
   if (radio.available()) {
     radio.read(&data, sizeof(data));
@@ -45,6 +46,7 @@ int getData() {
 }
 
 float getDataFloat() {
+  //Gets 4 bytes of data (used with location: latitude and longitude)
   byte flo[4];
   for(int i = 0; i<sizeof(float); i++){
     uint32_t maxMillis = millis() + 10000;

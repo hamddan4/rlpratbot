@@ -40,6 +40,7 @@ void setup_magneto()
 
 AXIS get_axis()
 {
+  //If we want to retrieve x, y and z (AXIS) we use this parameter
  MagnetometerScaled scaled = compass.ReadScaledAxis();
  float xAngle = atan2(scaled.YAxis, scaled.XAxis);
  float yAngle = atan2(scaled.ZAxis, scaled.XAxis);
@@ -50,6 +51,7 @@ AXIS get_axis()
 }
 
 int get_yangle() {
+  //We retrieve only Y parameter as the magnetometer is positioned vertically
  MagnetometerScaled scaled = compass.ReadScaledAxis();
  float yAngle = atan2(scaled.ZAxis, scaled.XAxis);
 
@@ -57,6 +59,7 @@ int get_yangle() {
 }
 
 int get_yangle_rotating(int yangle){
+  //When rotating, we do kalman with less filtering
   return rotatingKalman.updateEstimate(yangle);
 }
 

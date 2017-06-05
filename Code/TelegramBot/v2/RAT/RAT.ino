@@ -27,12 +27,12 @@
 // When Debugging the sensors, use these parameters
 // in order to print data through the serial
 //=======================================================
-const bool print_sonar = false;
-const bool print_magneto = false;
-const bool print_motors = false; //not implemented
-const bool print_GPS_pos = false;
-const bool print_GPS_dist = false; //this and above are the same, i think, dunno why there is two of them
-const bool print_avoidance_stats = true;
+const bool print_sonar = false;       //Distance from obstacles
+const bool print_magneto = false;     //Angle with the nord
+const bool print_motors = false; //debugging not implemented for this sensor/actuator
+const bool print_GPS_pos = false;     //Location and Latitude
+const bool print_GPS_dist = false;    //Distance from desired location
+const bool print_avoidance_stats = true;// Avoidance status debugging
 
 bool enable_GPS = true;     //If you want to work with the GPS, activate these parameter
 
@@ -48,13 +48,13 @@ float angle_calibrated = 0.0;           //Value that stores the angle when calib
 float angle_rotated = 0.0;              //Value that stores the actual angle when rotation is done
 boolean timer_set = false;              //Value that controls the setting of the timer
 int actual_millis;                      //Value that stores the actual timing of arduino's clock
-int timer_avoidance = 0;                //What?
+int timer_avoidance = 0;                //Value that stores the started timing for a desired step
 int actual_rot = ROTATING_RIGHT;        //NOT IMPLEMENTED YET (When this value is changed, the rotations of avoidance change)
 int diff_angle_rotated;                 //Difference of angle_calibrated and angle_rotated
 const int speed_avoid = 160;            //Speed of the motors when rotating. Needs to be slower bc magnetometer has to move slowly in order to read more reliable values
 
 
-int LAST_MOV = 0;                       //Deprecated variable, when you have time, delete it and test the code again
+int LAST_MOV = 0;                       //(i think) Deprecated variable, when you have time, delete it and test the code again
 
 
 SimpleKalmanFilter simpleKalmanFilter(1, 10, 0.01); //For obtain a precise mean and approximation for sonar measures, we use Kalman Filtering
