@@ -15,7 +15,7 @@ const byte thisSlaveAddress[5] = {'R','x','A','A','A'};
 RF24 radio(CE_PIN, CSN_PIN);
 
 bool newData = false;
-double dataReceived;
+char dataReceived[10];
 
 //===========
 
@@ -33,6 +33,7 @@ void setup() {
 void loop() {
     getData();
     if (newData) {
+        Serial.println("Retrieving data");
         Serial.println(dataReceived);
     }
 }
